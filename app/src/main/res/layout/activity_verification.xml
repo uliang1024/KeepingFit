@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:paddingHorizontal="50dp"
+    tools:context=".VerificationActivity">
+
+    <ImageView
+        android:id="@+id/icon_imageview"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/send_icon"
+        android:layout_gravity="center_horizontal"
+        android:paddingTop="32dp"
+        android:paddingBottom="16dp" />
+
+    <TextView
+        android:id="@+id/message_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:padding="16dp"
+        android:text="Check your email"
+        android:textSize="30dp"/>
+
+    <TextView
+        android:id="@+id/message_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:gravity="center"
+        android:text="To confirm your email address ,\n tap the button in button in the email\n we sent to you." />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/sendCode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="4dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:padding="10dp"
+            android:gravity="center_vertical|center_horizontal"
+            android:textSize="25dp"
+            android:text="VERIFY NOW"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:background="@drawable/custom_button"/>
+
+    </androidx.cardview.widget.CardView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:paddingTop="70dp"
+        >
+
+        <TextView
+            android:id="@+id/login_prompt_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Already verified ? " />
+
+        <TextView
+            android:id="@+id/loginBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Login"
+            android:textColor="#B070EB"
+            android:clickable="true" />
+
+    </LinearLayout>
+
+</LinearLayout>
