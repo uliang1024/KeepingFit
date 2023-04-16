@@ -18,7 +18,10 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Map;
 import java.util.Objects;
 
 public class Register extends AppCompatActivity {
@@ -27,6 +30,7 @@ public class Register extends AppCompatActivity {
     TextView mSignInBtn;
     CardView mSignUpBtn;
     FirebaseAuth fAuth;
+    FirebaseFirestore fStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +45,7 @@ public class Register extends AppCompatActivity {
         mSignInBtn = findViewById(R.id.signInBtn);
 
         fAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
 
         LoadingDialog loadingDialog = new LoadingDialog(Register.this);
 
@@ -53,6 +58,7 @@ public class Register extends AppCompatActivity {
             String email = mEmail.getText().toString().trim();
             String password = mPassword.getText().toString().trim();
             String rePassword = mRePassword.getText().toString().trim();
+            String username = mUsername.getText().toString().trim();
 
             loadingDialog.startLoadingDialog();
 
@@ -99,6 +105,14 @@ public class Register extends AppCompatActivity {
                     });
 
                     Toast.makeText(Register.this, "User Created.", Toast.LENGTH_SHORT).show();
+                    DocumentReference docRef = fStore.collection("Users").document(fUser.getUid());
+                    Map<String, Object> user = Map.of("username", username, "email", email);
+                    docRef.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+
+                        }
+                    });
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 } else {
                     Toast.makeText(Register.this, "Error ! ." + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
