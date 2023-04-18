@@ -1,4 +1,4 @@
-package com.example.keepingfit;
+package com.example.keepingfit.unpublished;
 
 import static android.content.ContentValues.TAG;
 
@@ -13,6 +13,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import com.example.keepingfit.alertdialog.LoadingDialog;
+import com.example.keepingfit.MainActivity;
+import com.example.keepingfit.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;

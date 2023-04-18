@@ -1,4 +1,4 @@
-package com.example.keepingfit;
+package com.example.keepingfit.unpublished;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import com.example.keepingfit.alertdialog.LoadingDialog;
+import com.example.keepingfit.MainActivity;
+import com.example.keepingfit.R;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -101,7 +104,7 @@ public class Login extends AppCompatActivity {
     }
 
     private void createDialog() {
-        View view = getLayoutInflater().inflate(R.layout.dialog_forgot_pass, null);
+        View view = getLayoutInflater().inflate(R.layout.dialog_forgot_pass, findViewById(android.R.id.content), false);
 
         Button send = view.findViewById(R.id.send);
         EditText email = view.findViewById(R.id.email);

@@ -27,11 +27,11 @@ android {
         main {
             res.srcDirs =
                     [
-                            'src/main/res/layouts/main',
-                            'src/main/res/layouts/unpublished',
-                            'src/main/res/layouts/profile',
-                            'src/main/res/layouts/alertdialog',
-                            'src/main/res/layouts',
+                            'src/main/res/layout/main',
+                            'src/main/res/layout/unpublished',
+                            'src/main/res/layout/profile',
+                            'src/main/res/layout/alertdialog',
+                            'src/main/res/layout',
                             'src/main/res'
                     ]
         }

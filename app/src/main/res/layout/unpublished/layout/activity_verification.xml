@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:gravity="center"
     android:paddingHorizontal="50dp"
-    tools:context=".VerificationActivity">
+    tools:context=".unpublished.VerificationActivity">
 
     <ImageView
         android:id="@+id/icon_imageview"
@@ -74,11 +74,12 @@
 
         <TextView
             android:id="@+id/loginBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:text="Login"
             android:textColor="#B070EB"
-            android:clickable="true" />
+            android:clickable="true"
+            android:gravity="center"/>
 
     </LinearLayout>
 
