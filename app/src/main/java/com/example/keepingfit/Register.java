@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,8 +13,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -92,28 +89,16 @@ public class Register extends AppCompatActivity {
                 if (task.isSuccessful()) {
 
                     FirebaseUser fUser = fAuth.getCurrentUser();
-                    fUser.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void unused) {
-                            Toast.makeText(Register.this, "Verification Email Sent.", Toast.LENGTH_SHORT).show();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@org.jetbrains.annotations.NotNull Exception e) {
-                            Log.d(TAG, "onFailure: Email not sent " + e.getMessage());
-                        }
-                    });
+                    fUser.sendEmailVerification().addOnSuccessListener(unused ->
+                            Toast.makeText(Register.this, "Verification Email Sent.",
+                                    Toast.LENGTH_SHORT).show()).addOnFailureListener(e -> Log.d(TAG, "onFailure: Email not sent " + e.getMessage()));
 
                     Toast.makeText(Register.this, "User Created.", Toast.LENGTH_SHORT).show();
                     DocumentReference docRef = fStore.collection("Users").document(fUser.getUid());
                     Map<String, Object> user = Map.of("username", username, "email", email);
-                    docRef.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void unused) {
-
-                        }
-                    });
+                    docRef.set(user).addOnSuccessListener(unused -> Log.d(TAG, "USER ADD" ));
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    finish();
                 } else {
                     Toast.makeText(Register.this, "Error ! ." + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -122,8 +107,6 @@ public class Register extends AppCompatActivity {
 
         });
 
-        mSignInBtn.setOnClickListener(v -> {
-            startActivity(new Intent(getApplicationContext(), Login.class));
-        });
+        mSignInBtn.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), Login.class)));
     }
 }

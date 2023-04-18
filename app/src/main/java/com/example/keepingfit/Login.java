@@ -15,6 +15,7 @@ import androidx.cardview.widget.CardView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Objects;
 
@@ -69,6 +70,7 @@ public class Login extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     Toast.makeText(Login.this, "User Logged In.", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    finish();
                 } else {
                     Toast.makeText(Login.this, "Error!." + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -76,20 +78,28 @@ public class Login extends AppCompatActivity {
             });
         });
 
-        mSignUpBtn.setOnClickListener(v -> {
-            startActivity(new Intent(getApplicationContext(), Register.class));
-        });
+        mSignUpBtn.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), Register.class)));
 
         forgotPassDialog = new BottomSheetDialog(Login.this);
 
         createDialog();
 
-        mForgotPass.setOnClickListener(v -> {
-            forgotPassDialog.show();
-        });
+        mForgotPass.setOnClickListener(v -> forgotPassDialog.show());
 
         forgotPassDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = fAuth.getCurrentUser();
+        if(currentUser != null){
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            finish();
+        }
+    }
+
     private void createDialog() {
         View view = getLayoutInflater().inflate(R.layout.dialog_forgot_pass, null);
 
