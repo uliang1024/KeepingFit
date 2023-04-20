@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "400797804298-mrcc8bqkb9d1mcrvmlghhhhk5bdomqd4.apps.googleusercontent.com",
+          "client_id": "400797804298-6fjekcrrv2bfdql15dds4k6qcirm3ojs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.keepingfit",
+            "certificate_hash": "2cf6be95e86850fa272be8315f0d7c883e253276"
+          }
+        },
+        {
+          "client_id": "400797804298-tjkig5vb0o74mr8l87u2jnhqtuvpo18r.apps.googleusercontent.com",
           "client_type": 3
         }
       ],

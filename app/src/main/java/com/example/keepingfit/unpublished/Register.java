@@ -13,15 +13,15 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
-import com.example.keepingfit.alertdialog.LoadingDialog;
+import com.example.keepingfit.Firestore.FirestoreHelper;
+import com.example.keepingfit.Firestore.FirestoreModel;
 import com.example.keepingfit.MainActivity;
 import com.example.keepingfit.R;
+import com.example.keepingfit.alertdialog.LoadingDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
-import java.util.Map;
 import java.util.Objects;
 
 public class Register extends AppCompatActivity {
@@ -29,8 +29,9 @@ public class Register extends AppCompatActivity {
     EditText mUsername, mEmail, mPassword, mRePassword;
     TextView mSignInBtn;
     CardView mSignUpBtn;
-    FirebaseAuth fAuth;
-    FirebaseFirestore fStore;
+    FirebaseAuth mAuth;
+    FirebaseUser user;
+    private static final String USERS_COLLECTION = "Users";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,15 +45,9 @@ public class Register extends AppCompatActivity {
         mSignUpBtn = findViewById(R.id.signupbtn);
         mSignInBtn = findViewById(R.id.signInBtn);
 
-        fAuth = FirebaseAuth.getInstance();
-        fStore = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
         LoadingDialog loadingDialog = new LoadingDialog(Register.this);
-
-        if (fAuth.getCurrentUser() != null) {
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-            finish();
-        }
 
         mSignUpBtn.setOnClickListener(v -> {
             String email = mEmail.getText().toString().trim();
@@ -61,6 +56,12 @@ public class Register extends AppCompatActivity {
             String username = mUsername.getText().toString().trim();
 
             loadingDialog.startLoadingDialog();
+
+            if (TextUtils.isEmpty(username)) {
+                mEmail.setError("username is Required.");
+                loadingDialog.dismissDialog();
+                return;
+            }
 
             if (TextUtils.isEmpty(email)) {
                 mEmail.setError("Email is Required.");
@@ -88,22 +89,30 @@ public class Register extends AppCompatActivity {
 
             loadingDialog.dismissDialog();
 
-            fAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(task -> {
+            mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-
-                    FirebaseUser fUser = fAuth.getCurrentUser();
-                    fUser.sendEmailVerification().addOnSuccessListener(unused ->
-                            Toast.makeText(Register.this, "Verification Email Sent.",
-                                    Toast.LENGTH_SHORT).show()).addOnFailureListener(e -> Log.d(TAG, "onFailure: Email not sent " + e.getMessage()));
-
-                    Toast.makeText(Register.this, "User Created.", Toast.LENGTH_SHORT).show();
-                    DocumentReference docRef = fStore.collection("Users").document(fUser.getUid());
-                    Map<String, Object> user = Map.of("username", username, "email", email);
-                    docRef.set(user).addOnSuccessListener(unused -> Log.d(TAG, "USER ADD" ));
-                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                    finish();
+                    user = mAuth.getCurrentUser();
+                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                            .setDisplayName(username)
+                            .build();
+                    user.updateProfile(profileUpdates)
+                            .addOnCompleteListener(task2 -> {
+                                if (task2.isSuccessful()) {
+                                    FirestoreModel model = new FirestoreModel(user.getDisplayName(), user.getEmail(), user.getPhotoUrl());
+                                    FirestoreHelper firestoreHelper = new FirestoreHelper();
+                                    firestoreHelper.addData(USERS_COLLECTION, user.getUid(), model, task1 -> {
+                                        if (task1.isSuccessful()) {
+                                            Log.d(TAG, "Document added successfully!");
+                                        } else {
+                                            Log.w(TAG, "Error adding document", task1.getException());
+                                        }
+                                    });
+                                    updateUI(user);
+                                }
+                            });
                 } else {
                     Toast.makeText(Register.this, "Error ! ." + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
+                    updateUI(null);
                 }
                 loadingDialog.dismissDialog();
             });
@@ -111,5 +120,32 @@ public class Register extends AppCompatActivity {
         });
 
         mSignInBtn.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), Login.class)));
+    }
+
+    private void updateUI(FirebaseUser user) {
+        if(user != null){
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            finish();
+        } else {
+            Toast.makeText(this, "登入失敗", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        user = mAuth.getCurrentUser();
+        if(user != null){
+            reload();
+        }
+    }
+
+    private void reload() {
+        user.reload()
+                .addOnSuccessListener(aVoid -> {
+                    // 資料已重新載入，更新使用者介面
+                    updateUI(user);
+                })
+                .addOnFailureListener(e -> Toast.makeText(Register.this, "載入使用者資料失敗", Toast.LENGTH_SHORT).show());
     }
 }

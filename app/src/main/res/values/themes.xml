@@ -23,4 +23,10 @@
         <item name="android:background">@drawable/corners_top</item>
     </style>
 
+    <!--圓角-->
+    <style name="roundedCorner" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">20dp</item>
+    </style>
+
 </resources>

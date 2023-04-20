@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.keepingfit.unpublished.Login;
 import com.example.keepingfit.unpublished.VerificationActivity;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -26,13 +27,14 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String OLD_PASS_REQUIRED = "Old password is required to reset password";
-    private static final String NEW_PASS_REQUIRED = "New password is required to reset password";
-    private static final String CONFIRM_PASS_REQUIRED = "Re-enter new password is required to reset password";
+    String OLD_PASS_REQUIRED = "Old password is required to reset password";
+    String NEW_PASS_REQUIRED = "New password is required to reset password";
+    String CONFIRM_PASS_REQUIRED = "Re-enter new password is required to reset password";
 
-    TextView userName, email;
-    FirebaseAuth fAuth;
-    FirebaseFirestore fStore;
+    TextView name, email;
+    ImageView userPhotoUrl;
+    FirebaseAuth mAuth;
+    FirebaseFirestore mStore;
     String userId;
     BottomSheetDialog resetPassDialog;
 
@@ -45,52 +47,43 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        userName = findViewById(R.id.userName);
+        name = findViewById(R.id.userName);
         email = findViewById(R.id.email);
+        userPhotoUrl = findViewById(R.id.userPhotoUrl);
 
-        fAuth = FirebaseAuth.getInstance();
-        fStore = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        mStore = FirebaseFirestore.getInstance();
 
-        userId = Objects.requireNonNull(fAuth.getCurrentUser()).getUid();
-        user = fAuth.getCurrentUser();
+        user = mAuth.getCurrentUser();
 
-        if (!user.isEmailVerified()) {
-            startActivity(new Intent(this, VerificationActivity.class));
+        if (user != null) {
+            userId = mAuth.getCurrentUser().getUid();
+            if (!user.isEmailVerified()) {
+                startActivity(new Intent(this, VerificationActivity.class));
+                finish();
+            }
+
+            DocumentReference documentReference = mStore.collection("Users").document(userId);
+            documentReference.addSnapshotListener(this, (value, error) -> {
+                if (value!= null) {
+                    name.setText(value.getString("name"));
+                    email.setText(value.getString("email"));
+                    Glide.with(this).load(value.getString("photoUrl")).into(userPhotoUrl);
+                }
+            });
+            resetPassDialog = new BottomSheetDialog(MainActivity.this);
+            createResetPassDialog();
+            resetPassDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        } else {
+            startActivity(new Intent(this, Login.class));
             finish();
         }
-
-        DocumentReference documentReference = fStore.collection("Users").document(userId);
-        documentReference.addSnapshotListener(this, (value, error) -> {
-            if (value!= null) {
-                userName.setText(value.getString("username"));
-                email.setText(value.getString("email"));
-            }
-        });
-
-        resetPassDialog = new BottomSheetDialog(MainActivity.this);
-
-        createResetPassDialog();
-
-        resetPassDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
-
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
     }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        // 拿到系统的 bottom_sheet
-        View view = resetPassDialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
-        if (view != null) {
-            // 获取behavior
-            BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(view);
-            // 设置弹出高度
-            int screenHeight = displayMetrics.heightPixels;
-            behavior.setPeekHeight(screenHeight, true);
-        }
-    }
-
     private void createResetPassDialog() {
+
+
         View view = getLayoutInflater().inflate(R.layout.dialog_reset_pass, findViewById(android.R.id.content), false);
 
         EditText oldPass = view.findViewById(R.id.oldPassword);
@@ -118,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            fAuth.signInWithEmailAndPassword(Objects.requireNonNull(user.getEmail()), pass1).addOnCompleteListener(task -> {
+            mAuth.signInWithEmailAndPassword(Objects.requireNonNull(user.getEmail()), pass1).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     if (!pass3.equals(pass2)) {
                         Toast.makeText(MainActivity.this,  "passwords do not match", Toast.LENGTH_SHORT).show();
@@ -136,6 +129,8 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "password is incorrect !." , Toast.LENGTH_SHORT).show();
                 }
             });
+
+
         });
 
         closeButton.setOnClickListener(v -> resetPassDialog.dismiss());
@@ -149,13 +144,25 @@ public class MainActivity extends AppCompatActivity {
 
         resetPassDialog.setContentView(view);
     }
-
     public void resetPass(View view) {
         resetPassDialog.show();
     }
+    @Override
+    public void onStart() {
+        super.onStart();
+        // 拿到系统的 bottom_sheet
+        View view = resetPassDialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+        if (view != null) {
+            // 获取behavior
+            BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(view);
+            // 设置弹出高度
+            int screenHeight = displayMetrics.heightPixels;
+            behavior.setPeekHeight(screenHeight, true);
+        }
+    }
 
     public void louGout(View view) {
-        fAuth.signOut();
+        mAuth.signOut();
         startActivity(new Intent(this, Login.class));
         finish();
     }
