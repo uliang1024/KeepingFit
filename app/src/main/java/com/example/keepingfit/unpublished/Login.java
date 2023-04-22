@@ -42,13 +42,11 @@ public class Login extends AppCompatActivity {
     CardView mLoginBtn;
     ImageView googleBtn,facebookBtn;
     FirebaseAuth mAuth;
-    FirebaseUser user;
     BottomSheetDialog forgotPassDialog;
     LoadingDialog loadingDialog;
     SignInClient oneTapClient;
     BeginSignInRequest signInRequest;
     int REQ_ONE_TAP = 1;
-    private static final String USERS_COLLECTION = "Users";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +92,7 @@ public class Login extends AppCompatActivity {
             mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     Log.d(TAG, "signInWithEmail:success");
-                    user = mAuth.getCurrentUser();
+                    FirebaseUser user = mAuth.getCurrentUser();
                     updateUI(user);
                     login();
                 } else {
@@ -151,13 +149,13 @@ public class Login extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        user = mAuth.getCurrentUser();
+        FirebaseUser user = mAuth.getCurrentUser();
         if(user != null){
-            reload();
+            reload(user);
         }
     }
 
-    private void reload() {
+    private void reload(FirebaseUser user) {
         user.reload()
                 .addOnSuccessListener(aVoid -> {
                     // 資料已重新載入，更新使用者介面
@@ -182,17 +180,16 @@ public class Login extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     // Sign in success, update UI with the signed-in user's information
                                     FirebaseUser user = mAuth.getCurrentUser();
-                                    assert user != null;
-                                    FirestoreModel model = new FirestoreModel(user.getDisplayName(), user.getEmail(), user.getPhotoUrl());
-                                    FirestoreHelper firestoreHelper = new FirestoreHelper();
-                                    firestoreHelper.addData(USERS_COLLECTION, user.getUid(), model, task1 -> {
-                                        if (task1.isSuccessful()) {
-                                            Log.d(TAG, "Document added successfully!");
-                                        } else {
-                                            Log.w(TAG, "Error adding document", task1.getException());
-                                        }
-                                    });
-                                    updateUI(user);
+                                    try {
+                                        assert user != null;
+                                        FirestoreModel model = new FirestoreModel( user.getDisplayName(), user.getEmail(), user.getPhotoUrl());
+                                        FirestoreHelper firestoreHelper = new FirestoreHelper();
+                                        firestoreHelper.addData(user.getUid(), model);
+                                        updateUI(user);
+                                    } catch (NullPointerException e) {
+                                        Log.e(TAG, "Error getting user information", e);
+                                        updateUI(null);
+                                    }
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w(TAG, "signInWithCredential:failure", task.getException());

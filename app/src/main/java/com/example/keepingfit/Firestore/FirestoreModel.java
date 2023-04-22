@@ -3,12 +3,13 @@ package com.example.keepingfit.Firestore;
 import android.net.Uri;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FirestoreModel {
     private String name;
     private String email;
     private Uri photoUri;
-    private Date createdAt;
 
     public FirestoreModel() {}
 
@@ -40,5 +41,13 @@ public class FirestoreModel {
 
     public void setPhotoUri(Uri photoUri) {
         this.photoUri = photoUri;
+    }
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> result = new HashMap<>();
+        result.put("name", name == null ? "" : name);
+        result.put("email", email == null ? "" : email);
+        result.put("photoUri", photoUri == null ? "" : photoUri);
+        return result;
     }
 }

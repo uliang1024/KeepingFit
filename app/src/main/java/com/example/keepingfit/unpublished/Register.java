@@ -20,9 +20,6 @@ import com.example.keepingfit.R;
 import com.example.keepingfit.alertdialog.LoadingDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
-
-import java.util.Objects;
 
 public class Register extends AppCompatActivity {
 
@@ -31,7 +28,6 @@ public class Register extends AppCompatActivity {
     CardView mSignUpBtn;
     FirebaseAuth mAuth;
     FirebaseUser user;
-    private static final String USERS_COLLECTION = "Users";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,29 +85,20 @@ public class Register extends AppCompatActivity {
 
             loadingDialog.dismissDialog();
 
-            mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(task -> {
+            mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    user = mAuth.getCurrentUser();
-                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                            .setDisplayName(username)
-                            .build();
-                    user.updateProfile(profileUpdates)
-                            .addOnCompleteListener(task2 -> {
-                                if (task2.isSuccessful()) {
-                                    FirestoreModel model = new FirestoreModel(user.getDisplayName(), user.getEmail(), user.getPhotoUrl());
-                                    FirestoreHelper firestoreHelper = new FirestoreHelper();
-                                    firestoreHelper.addData(USERS_COLLECTION, user.getUid(), model, task1 -> {
-                                        if (task1.isSuccessful()) {
-                                            Log.d(TAG, "Document added successfully!");
-                                        } else {
-                                            Log.w(TAG, "Error adding document", task1.getException());
-                                        }
-                                    });
-                                    updateUI(user);
-                                }
-                            });
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    if (user != null) {
+                        FirestoreModel model = new FirestoreModel(username, email, null);
+                        FirestoreHelper firestoreHelper = new FirestoreHelper();
+                        firestoreHelper.addData(user.getUid(), model);
+                        updateUI(user);
+                    } else {
+                        Log.e(TAG, "Error getting current user");
+                        updateUI(null);
+                    }
                 } else {
-                    Toast.makeText(Register.this, "Error ! ." + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.w(TAG, "signInWithCredential:failure", task.getException());
                     updateUI(null);
                 }
                 loadingDialog.dismissDialog();

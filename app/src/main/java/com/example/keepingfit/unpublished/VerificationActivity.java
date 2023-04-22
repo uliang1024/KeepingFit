@@ -12,25 +12,26 @@ import androidx.cardview.widget.CardView;
 import com.example.keepingfit.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class VerificationActivity extends AppCompatActivity {
 
     CardView sendCode;
-    FirebaseAuth mAuth;
     TextView loginBtn;
-
+    FirebaseAuth mAuth;
+    FirebaseUser user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verification);
 
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
+
         sendCode = findViewById(R.id.sendCode);
         loginBtn = findViewById(R.id.loginBtn);
 
-        mAuth = FirebaseAuth.getInstance();
-
         sendCode.setOnClickListener(v -> {
-            FirebaseUser user = mAuth.getCurrentUser();
             if (user != null) {
                 user.sendEmailVerification().addOnSuccessListener(unused ->
                         Toast.makeText(VerificationActivity.this, "Verification Email Sent.",
