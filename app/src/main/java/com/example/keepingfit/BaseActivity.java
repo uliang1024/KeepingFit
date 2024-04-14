@@ -12,10 +12,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class BaseActivity extends AppCompatActivity {
-    protected FirebaseAuth mAuth;
-    protected FirebaseFirestore mStore;
-    protected FirebaseUser user;
-    protected String userId;
+    public FirebaseAuth mAuth;
+    public FirebaseFirestore mStore;
+    public FirebaseUser user;
+    public String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -15,6 +15,12 @@
         android:theme="@style/Theme.KeepingFit"
         tools:targetApi="31">
         <activity
+            android:name=".FastingPlan.FastingTime"
+            android:exported="false" />
+        <activity
+            android:name=".FastingPlan.ChooseFasting"
+            android:exported="false" />
+        <activity
             android:name=".user.BodyCompositionActivity"
             android:exported="false" />
         <activity

@@ -4,67 +4,219 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorPrimary">
+    android:background="?android:attr/windowBackground">
 
     <ScrollView
+        android:id="@+id/scrollView3"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp">
+            android:layout_margin="16dp"
+            tools:layout_editor_absoluteX="16dp"
+            android:paddingHorizontal="30dp">
 
             <soup.neumorphism.NeumorphCardView
                 android:id="@+id/maleButton"
                 style="@style/Widget.Neumorph.CardView"
-                app:neumorph_shapeType="flat"
-                app:neumorph_inset="8dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/femaleButton"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:foreground="?attr/selectableItemBackgroundBorderless">
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                app:layout_constraintEnd_toStartOf="@id/femaleButton"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:neumorph_inset="12dp"
+                app:neumorph_shapeType="flat"
+                app:neumorph_shapeAppearance="@style/CustomShapeAppearance">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/baseline_male_24" />
+                    android:src="@drawable/baseline_male_24"
+                    app:tint="?attr/colorOnBackground"/>
 
             </soup.neumorphism.NeumorphCardView>
 
             <soup.neumorphism.NeumorphCardView
                 android:id="@+id/femaleButton"
                 style="@style/Widget.Neumorph.CardView"
-                app:neumorph_shapeType="pressed"
-                app:neumorph_inset="8dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@id/maleButton"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:foreground="?attr/selectableItemBackgroundBorderless">
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toEndOf="@id/maleButton"
+                app:layout_constraintTop_toTopOf="parent"
+                app:neumorph_inset="12dp"
+                app:neumorph_shapeType="flat"
+                app:neumorph_shapeAppearance="@style/CustomShapeAppearance">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/baseline_female_24" />
+                    android:src="@drawable/baseline_female_24"
+                    app:tint="?attr/colorOnBackground"/>
+
+            </soup.neumorphism.NeumorphCardView>
+
+            <soup.neumorphism.NeumorphCardView
+                android:id="@+id/dateCardView"
+                style="@style/Widget.Neumorph.CardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/femaleButton"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:neumorph_inset="12dp"
+                app:neumorph_shadowElevation="6dp"
+                app:neumorph_shapeType="flat">
+
+                <TextView
+                    android:id="@+id/date_picker_button"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:text="選擇出生日期"
+                    android:textSize="20sp"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textStyle="bold"
+                    android:layout_height="match_parent"
+                    android:padding="10dp"/>
+
+            </soup.neumorphism.NeumorphCardView>
+
+            <soup.neumorphism.NeumorphCardView
+                android:id="@+id/heightCardView"
+                style="@style/Widget.Neumorph.CardView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/weightCardView"
+                app:layout_constraintTop_toBottomOf="@+id/dateCardView"
+                app:neumorph_inset="12dp"
+                app:neumorph_shapeAppearance="@style/CustomShapeAppearance"
+                app:neumorph_shapeType="flat">
+
+                <EditText
+                    android:id="@+id/height_button"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:hint="輸入身高"
+                    android:textSize="20sp"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textStyle="bold"
+                    android:layout_height="match_parent"
+                    android:padding="10dp"/>
+
+            </soup.neumorphism.NeumorphCardView>
+
+            <soup.neumorphism.NeumorphCardView
+                android:id="@+id/weightCardView"
+                style="@style/Widget.Neumorph.CardView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/heightCardView"
+                app:layout_constraintTop_toBottomOf="@+id/dateCardView"
+                app:neumorph_inset="12dp"
+                app:neumorph_shapeAppearance="@style/CustomShapeAppearance"
+                app:neumorph_shapeType="flat">
+
+                <EditText
+                    android:id="@+id/weight_button"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:hint="輸入體重"
+                    android:textSize="20sp"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textStyle="bold"
+                    android:layout_height="match_parent"
+                    android:padding="10dp"/>
+
+            </soup.neumorphism.NeumorphCardView>
+
+            <soup.neumorphism.NeumorphCardView
+                android:id="@+id/sportsCardView"
+                style="@style/Widget.Neumorph.CardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/heightCardView"
+                app:neumorph_inset="12dp"
+                app:neumorph_shapeAppearance="@style/CustomShapeAppearance"
+                app:neumorph_shapeType="flat">
+
+                <Button
+                    android:id="@+id/sports_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:hint="活動程度"
+                    android:background="@color/border_color_translucent"
+                    android:padding="10dp"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+            </soup.neumorphism.NeumorphCardView>
+
+            <soup.neumorphism.NeumorphCardView
+                android:id="@+id/confirmCardView"
+                style="@style/Widget.Neumorph.CardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sportsCardView"
+                app:neumorph_inset="12dp"
+                app:neumorph_shapeAppearance="@style/CustomShapeAppearance"
+                app:neumorph_shapeType="flat">
+
+                <TextView
+                    android:id="@+id/confirm_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="完成"
+                    android:background="@drawable/custom_button"
+                    android:padding="10dp"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
             </soup.neumorphism.NeumorphCardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,7 +9,7 @@ public class BodyCompositionModel {
     private float weight;
     private int age;
     private String gender;
-    private float bodyFatPercentage;
+    private float sports;
     private float bmi;
 
     private final Date date;
@@ -19,16 +19,16 @@ public class BodyCompositionModel {
         this.gender = "";
         this.height = 0;
         this.weight = 0;
-        this.bodyFatPercentage = 0;
+        this.sports = 0;
         this.bmi = 0;
         this.date = new Date();
     }
 
-    public BodyCompositionModel(float height, float weight, float bmi, float bodyFatPercentage, int age, String gender) {
+    public BodyCompositionModel(float height, float weight, float bmi, float sports, int age, String gender) {
         this.height = height;
         this.weight = weight;
         this.bmi = bmi;
-        this.bodyFatPercentage = bodyFatPercentage;
+        this.sports = sports;
         this.age = age;
         this.gender = gender;
         this.date = new Date();
@@ -60,12 +60,12 @@ public class BodyCompositionModel {
         // 這個方法可以保留，因為我們不需要手動設置 BMI
     }
 
-    public float getBodyFatPercentage() {
-        return bodyFatPercentage;
+    public float getSports() {
+        return sports;
     }
 
-    public void setBodyFatPercentage(float bodyFatPercentage) {
-        this.bodyFatPercentage = bodyFatPercentage;
+    public void setSports(float sports) {
+        this.sports = sports;
     }
 
     public int getAge() {
@@ -89,7 +89,7 @@ public class BodyCompositionModel {
         map.put("height", height);
         map.put("weight", weight);
         map.put("bmi", bmi);
-        map.put("bodyFatPercentage", bodyFatPercentage);
+        map.put("sports", sports);
         map.put("age", age);
         map.put("gender", gender);
         map.put("createdAt", date);
